@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 544fb994b587757419aad57fa3261472
+guid: 0c0a6d2683fb84e4193f2aa968264881
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
@@ -11,8 +11,8 @@ MonoImporter:
   assetBundleVariant: 
 AssetOrigin:
   serializedVersion: 1
-  productId: 143535
-  packageName: Ultimate Low Poly Dungeon
-  packageVersion: 2.0
-  assetPath: Assets/BrokenVector/LowPolyDungeon/Demo Scenes/MouseCamLook.cs
-  uploadId: 481753
+  productId: 27676
+  packageName: DOTween (HOTween v2)
+  packageVersion: 1.2.825
+  assetPath: Assets/Plugins/Demigiant/DOTween/Modules/DOTweenModuleUIToolkit.cs
+  uploadId: 862444
