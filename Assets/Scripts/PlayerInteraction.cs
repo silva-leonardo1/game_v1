@@ -3,60 +3,76 @@ using UnityEngine;
 public class PlayerInteraction : MonoBehaviour
 {
     public float playerReach = 3f;
-    Interactable currentInteractable;
+    public LayerMask layerToIgnore; // No Inspector, selecione a layer 'whatisplayer' aqui
+    private Interactable currentInteractable;
+
     void Update()
     {
-        checkInteraction();
+        CheckInteraction();
+
         if (Input.GetKeyDown(KeyCode.E) && currentInteractable != null)
         {
             currentInteractable.interact();
         }
+    }
 
-        void checkInteraction()
+    void CheckInteraction()
+    {
+        RaycastHit hit;
+        // O '~' inverte a máscara, fazendo o raio ignorar a layer selecionada
+        Ray ray = new Ray(transform.position, transform.forward);
+
+        if (Physics.Raycast(ray, out hit, playerReach, ~layerToIgnore))
         {
-            RaycastHit hit;
-            Ray ray = new Ray(Camera.main.transform.position, Camera.main.transform.forward);
-            if (Physics.Raycast(ray, out hit, playerReach))
+            if (hit.collider.CompareTag("Interactable"))
             {
-                if (hit.collider.tag == "Interactable")
+                Interactable newInteractable = hit.collider.GetComponent<Interactable>();
+
+                // Se mudamos de um interactable para outro, desativa o outline do anterior
+                if (currentInteractable != null && newInteractable != currentInteractable)
                 {
-                    Interactable newInteractable = hit.collider.GetComponent<Interactable>();
-                    if (currentInteractable && newInteractable != currentInteractable)
-                    {
-                        currentInteractable.disableOutline();
-                    }
-                    if (newInteractable.enabled)
-                    {
-                        setNewCurrentInteractable(newInteractable);
-                    }
-                    else
-                    {
-                        disableCurrentInteractable();
-                    }
+                    currentInteractable.disableOutline();
+                }
+
+                if (newInteractable.enabled)
+                {
+                    SetNewCurrentInteractable(newInteractable);
                 }
                 else
                 {
-                    disableCurrentInteractable();
+                    DisableCurrentInteractable();
                 }
             }
             else
             {
-                disableCurrentInteractable();
+                DisableCurrentInteractable();
             }
         }
-
-        void setNewCurrentInteractable(Interactable newInteractable)
+        else
         {
-                currentInteractable = newInteractable;
-                currentInteractable.enableOutline();
-                HUDcontroller.instance.enableInteractionText(currentInteractable.message);
+            DisableCurrentInteractable();
         }
     }
 
-    void disableCurrentInteractable()
+    void SetNewCurrentInteractable(Interactable newInteractable)
     {
-        HUDcontroller.instance.disableInteractionText();
-        if (currentInteractable)
+        currentInteractable = newInteractable;
+        currentInteractable.enableOutline();
+        
+        if (HUDcontroller.instance != null)
+        {
+            HUDcontroller.instance.enableInteractionText(currentInteractable.message);
+        }
+    }
+
+    void DisableCurrentInteractable()
+    {
+        if (HUDcontroller.instance != null)
+        {
+            HUDcontroller.instance.disableInteractionText();
+        }
+
+        if (currentInteractable != null)
         {
             currentInteractable.disableOutline();
             currentInteractable = null;
