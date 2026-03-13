@@ -43,17 +43,19 @@ public class PlayerInteraction : MonoBehaviour
             {
                 disableCurrentInteractable();
             }
-    }
+        }
 
-    void setNewCurrentInteractable(Interactable newInteractable)
-    {
-            currentInteractable = newInteractable;
-            currentInteractable.enableOutline();
-    }
+        void setNewCurrentInteractable(Interactable newInteractable)
+        {
+                currentInteractable = newInteractable;
+                currentInteractable.enableOutline();
+                HUDcontroller.instance.enableInteractionText(currentInteractable.message);
+        }
     }
 
     void disableCurrentInteractable()
     {
+        HUDcontroller.instance.disableInteractionText();
         if (currentInteractable)
         {
             currentInteractable.disableOutline();
