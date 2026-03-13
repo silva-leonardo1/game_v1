@@ -3,17 +3,27 @@ using UnityEngine.Events;
 
 public class Interactable : MonoBehaviour
 {
-    //Outline outline;
+    Outline outline;
     public string message;
     public UnityEvent onInteraction;
     void Start()
     {
-        //outline = GetComponent<Outline>();
-        //outline.enabled = false;
+        outline = GetComponent<Outline>();
+        disableOutline();
     }
 
-    public void DisableOutline()
+    public void interact()
     {
-        //outline.enabled = false;
+        onInteraction.Invoke();
+    }
+
+    public void disableOutline()
+    {
+        outline.enabled = false;
+    }
+
+    public void enableOutline()
+    {
+        outline.enabled = true;
     }
 }
