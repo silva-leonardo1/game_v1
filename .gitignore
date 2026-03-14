@@ -18,6 +18,7 @@
 *.unityproj
 *.booproj
 *.pidb
+Screenshot_*.png
 
 # Pastas de editores
 .vscode/
