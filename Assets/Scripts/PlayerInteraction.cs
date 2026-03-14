@@ -3,13 +3,14 @@ using UnityEngine;
 public class PlayerInteraction : MonoBehaviour
 {
     public float playerReach = 3f;
-    public LayerMask layerToIgnore; // No Inspector, selecione a layer 'whatisplayer' aqui
+    public LayerMask layerToIgnore; 
     private Interactable currentInteractable;
 
     void Update()
     {
         CheckInteraction();
 
+        // Interação ao apertar E
         if (Input.GetKeyDown(KeyCode.E) && currentInteractable != null)
         {
             currentInteractable.interact();
@@ -19,36 +20,29 @@ public class PlayerInteraction : MonoBehaviour
     void CheckInteraction()
     {
         RaycastHit hit;
-        // O '~' inverte a máscara, fazendo o raio ignorar a layer selecionada
+        // Importante: Usamos o transform da câmera (onde o script deve estar)
         Ray ray = new Ray(transform.position, transform.forward);
 
+        // O '~' inverte a máscara para ignorar o que você selecionou
         if (Physics.Raycast(ray, out hit, playerReach, ~layerToIgnore))
         {
             if (hit.collider.CompareTag("Interactable"))
             {
                 Interactable newInteractable = hit.collider.GetComponent<Interactable>();
 
-                // Se mudamos de um interactable para outro, desativa o outline do anterior
-                if (currentInteractable != null && newInteractable != currentInteractable)
+                if (newInteractable != null && newInteractable.enabled)
                 {
-                    currentInteractable.disableOutline();
+                    if (newInteractable != currentInteractable)
+                    {
+                        SetNewCurrentInteractable(newInteractable);
+                    }
+                    return; // Retorna aqui para manter o texto ativo
                 }
-
-                if (newInteractable.enabled)
-                {
-                    SetNewCurrentInteractable(newInteractable);
-                }
-                else
-                {
-                    DisableCurrentInteractable();
-                }
-            }
-            else
-            {
-                DisableCurrentInteractable();
             }
         }
-        else
+
+        // Só desativa se o raio NÃO encontrou um Interactable válido
+        if (currentInteractable != null)
         {
             DisableCurrentInteractable();
         }
